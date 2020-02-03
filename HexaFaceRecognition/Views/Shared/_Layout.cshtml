@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title - Hexaware Face Recognition</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+</head>
+<body>
+
+    <div class="main_section homescreen">
+        <nav class="navbar navbar-inverse">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/"><div class="img-responsive" id="toggleimglogo_1"></div></a>
+                    <p class="navbar-text">FACE RECOGNITION</p>
+                </div>
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>@Html.ActionLink("Check-In", "Identify", "Detect", new { Area = "Faces" }, new { })</li>
+                        <li>@Html.ActionLink("Manage Person", "Index", "PersonGroups", new { Area = "Faces" }, new { })</li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <section class="mainContent_section">
+            <div class="container">
+                @RenderBody()
+            </div>
+        </section>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script>
+				$(function () {
+    function reposition() {
+        var modal = $(this),
+        dialog = modal.find('.modal-dialog');
+        modal.css('display', 'block');
+        // Dividing by two centers the modal exactly, but dividing by three
+        // or four works better for larger screens.
+        dialog.css("margin-top", Math.max(0, ($(window).height() - dialog.height()) / 2));
+    }
+    // Reposition when a modal is shown
+    $('.modal').on('show.bs.modal', reposition);
+    // Reposition when the window is resized
+    $(window).on('resize', function () {
+        $('.modal:visible').each(reposition);
+    });
+});
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

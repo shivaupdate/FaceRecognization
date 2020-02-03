@@ -1,0 +1,283 @@
+﻿@model IdentifyFacesModel
+@{
+    /**/
+
+    ViewBag.Title = "Identify";
+    var groups = (PersonGroup[])ViewBag.PersonGroups;
+}
+
+@section Scripts {
+<script type="text/JavaScript">
+        function checkImage(src, good) {
+            var img = new Image();
+            img.onload = good;
+            //img.onerror = bad;
+            img.src = src;
+        }
+        $(document).ready(function () {
+            $('#myModal').modal('show');
+            checkImage("../../images/IDCard/" + "@Model.IdentifiedFaces.FirstOrDefault().PersonCandidates.Select(p => p.Value).FirstOrDefault().Split('|')[0]" + ".png", function () { document.getElementById('clientphoto').src = this.src; });
+        });
+        $('#myModal').on('hidden.bs.modal', function () {
+            $(location).prop('href', "Identify");
+        });
+        function printID() {
+            if (($("#orangeForm-name").val() != "") && ($.type($("#orangeForm-name").val()) != "undefined") ){
+
+                $("#iName").text($("#orangeForm-name").val());
+                $("#iDesc").text($("#orangeForm-Designation").val());
+                $("#iComp").text($("#orangeForm-Company").val());
+            }
+            else if (($("#Regis-name").val() != "") && ($.type($("#Regis-name").val()) != "undefined")){
+                $("#iName").text($("#Regis-name").val());
+                $("#iDesc").text($("#Regis-Designation").val());
+                $("#iComp").text($("#Regis-Company").val());
+            }else {
+                $("#iName").text($("#IdentifiedName").val());
+                $("#iComp").text($("#IdentifiedCompany").val());
+                $("#iDesc").text($("#IdentifiedDesignation").val());
+            }
+            alert($("#iName").val());
+            checkImage("../../images/IDCard/" + $("#iName").val() + ".png", function () { document.getElementById('clientphoto1').src = this.src; });
+            alert("../../images/IDCard/" + $("#iName").val() + ".png");
+            var headstr = "<html><head><title>Walkin User</title></head><body>";
+            var footstr = "</body>";
+            var newstr = document.getElementById('print').innerHTML;
+            var oldstr = document.body.innerHTML;
+            document.body.innerHTML = headstr + newstr + footstr;
+            window.print();
+            document.body.innerHTML = oldstr;
+            $('#myModal').modal('hide');
+            $(location).prop('href', "Identify");
+            return false;
+            /*
+
+
+            $('#print').show();
+            var divToPrint = document.getElementById('print');
+
+            var newWin = window.open('', 'Print-Window');
+
+            newWin.document.open();
+
+            newWin.document.write('<html><link href = "~/Content/Site.css" rel="stylesheet" /><body onload="window.print()">' + divToPrint.innerHTML + '</body></html>');
+
+            newWin.document.close();
+
+            //setTimeout(function () { newWin.close(); }, 10);
+            $('#myModal').modal('hide');
+            $('#print').hide();
+            $(location).prop('href', "Identify");
+            */
+        }
+        function printdiv() {
+            var headstr = "<html><head><title>Booking Details</title></head><body>";
+            var footstr = "</body>";
+            var newstr = document.getElementById('print1').innerHTML;
+            var oldstr = document.body.innerHTML;
+            document.body.innerHTML = headstr + newstr + footstr;
+            window.print();
+            document.body.innerHTML = oldstr;
+            $('#myModal').modal('hide');
+            $(location).prop('href', "Identify");
+            return false;
+        }
+        function RegisterID() {
+            $('#caseID').hide();
+            $('#regis').show();
+
+        }
+        function closePopup() {
+            $(location).prop('href', "Identify");
+            $('#myModal').modal('hide');
+
+        }
+    </script>
+}
+
+@if (Model.ImageDump != null)
+{
+    <div class="row martop20">
+        <div class="col-xs-12">
+            <h2 class="identifyTxt">Identify Yourself</h2>
+        </div>
+    </div>
+    <br /><img src="@Model.ImageDump" width="330" height="250" style="border: 1px solid darkgray" />
+
+    <h3>Faces</h3>
+    if (Model.Error != null)
+    {
+        <strong>@Model.Error</strong>
+
+    }
+    else
+    {
+        <text>@Model.IdentifiedFaces.FirstOrDefault().PersonCandidates.Select(p => p.Value).FirstOrDefault().Split('|')[0]</text><br />
+
+    }
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <div id="caseID">
+                @if (Model.Error == null)
+                {
+                    <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Welcome</h4>
+                    </div>
+                    <div id="print1">
+                        <link media="print" href="~/Content/bootstrap.min.css" rel="stylesheet">
+                        <link href="~/Content/Site.css" rel="stylesheet">
+                        <style>
+                            @@media print {
+                                *, :before, :after {
+                                    color: inherit !important;
+                                    text-shadow: inherit !important;
+                                    background: inherit !important;
+                                    -webkit-box-shadow: inherit !important;
+                                    box-shadow: inherit !important;
+                                }
+                            }
+
+                            a[href]:after {
+                                content: none;
+                            }
+                        </style>
+                        <div class="idcard_main">
+
+                            <div class="idcardbg">
+                                <a href=""><img src="~/images/app background-01.png" alt="This is my header" /></a>
+                                <div class="profilepicOuter">
+                                    <div class="avatar_IMGR">
+                                        <img id="clientphoto" class="img-responsive avatar_IMGW patch" src="@Model.ImageDump" />
+                                    </div>
+                                </div>
+                                <div class="idcard_details">
+                                    <h2 id="iName">@Model.IdentifiedFaces.FirstOrDefault().PersonCandidates.Select(p => p.Value).FirstOrDefault().Split('|')[0]</h2>
+                                    <p id="iDesc"></p>
+                                    <p id="iComp">@Model.IdentifiedFaces.FirstOrDefault().PersonCandidates.Select(p => p.Value).FirstOrDefault().Split('|')[1]</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    @*<div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Are you @Model.IdentifiedFaces.FirstOrDefault().PersonCandidates.Select(p => p.Value).FirstOrDefault().Split('|')[0] ?
+                                </div>
+                                <input type="text" id="IdentifiedName" value="@Model.IdentifiedFaces.FirstOrDefault().PersonCandidates.Select(p => p.Value).FirstOrDefault().Split('|')[0]" hidden />
+                                <input type="text" id="IdentifiedCompany" value="@Model.IdentifiedFaces.FirstOrDefault().PersonCandidates.Select(p => p.Value).FirstOrDefault().Split('|')[1]" hidden />
+                                <input type="text" id="IdentifiedDesignation" value="@Model.IdentifiedFaces.FirstOrDefault().PersonCandidates.Select(p => p.Value).FirstOrDefault().Split('|')[2]" hidden />
+                            </div>
+                        </div>
+                    </div>*@
+                    <div class="modal-footer buttons_div mt40">
+                        <button type="button" class="btn btn-default btn-outline" onclick="closePopup()">Error</button>
+                        <button type="button" class="btn btn-danger btn-outline" onclick="printdiv()">Submit</button>
+                    </div>
+                </div>
+                <script>
+                    
+                </script>
+                }
+                else
+                {
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title w-100 font-weight-bold">Register your identity</h4>
+                            
+                        </div>
+                        <div class="modal-body mx-3">
+                            <div class="md-form mb-5">
+                                <input type="text" id="orangeForm-name" class="form-control validate" placeholder="Name" />
+                            </div>
+                            <br />
+                            <div class="md-form mb-5">
+                                <input type="text" id="orangeForm-Company" class="form-control validate" placeholder="Company Name" />
+                            </div>
+                            <br />
+                            <div class="md-form mb-5">
+                                <input type="hidden" id="orangeForm-Designation" class="form-control validate" placeholder="Designation" hidden/>
+                            </div>
+                        </div>
+                        <div class="modal-footer buttons_div text-right mt40">
+                            <button type="button" class="btn btn-default btn-outline" onclick="closePopup()">Close</button>
+                            <button type="button" class="btn btn-danger btn-outline" onclick="printID()">Register</button>
+
+                        </div>
+                    </div>
+                }
+            </div>
+            <div id="regis" class="modal-content" style="display:none;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title w-100 font-weight-bold">Register your identity</h4>
+                </div>
+                <div class="modal-body mx-3">
+                    <div class="md-form mb-5">
+                        <input type="text" id="Regis-name" class="form-control validate" placeholder="Name" />
+                    </div>
+                    <br />
+                    <div class="md-form mb-5">
+                        <input type="text" id="Regis-Company" class="form-control validate" placeholder="Company Name" />
+                    </div>
+                    <br />
+                    <div class="md-form mb-5">
+                        <input type="hidden" id="Regis-Designation" class="form-control validate" placeholder="Designation" hidden/>
+                    </div>
+
+                </div>
+                <div class="modal-footer buttons_div text-right mt40">
+                    <button type="button" class="btn btn-default btn-outline" onclick="closePopup()">Close</button>
+                    <button type="button" class="btn btn-danger btn-outline" onclick="printID()">Register</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="print" style="display:none">
+        <link media="print" href="~/Content/bootstrap.min.css" rel="stylesheet">
+        <link href="~/Content/Site.css" rel="stylesheet">
+        <style>
+        @@media print {
+            *, :before, :after {
+            color: inherit !important;
+            text-shadow: inherit !important;
+            background: inherit !important;
+            -webkit-box-shadow: inherit !important;
+            box-shadow: inherit !important;
+            }
+        }
+        a[href]:after{content:none;}
+        </style>
+        <div class="idcard_main">
+
+            <div class="idcardbg">
+                <a href=""><img src="~/images/app background-01.png" alt="This is my header" /></a>
+                <div class="profilepicOuter">
+                    <div class="avatar_IMGR">
+                        <img id="clientphoto1" class="img-responsive avatar_IMGW patch" src="@Model.ImageDump" />
+                    </div>
+                </div>
+                <div class="idcard_details">
+                    <h2 id="iName"></h2>
+                    <p id="iDesc"></p>
+                    <p id="iComp"></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}

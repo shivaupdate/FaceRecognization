@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Person>
+@{
+    ViewBag.Title = "Manage People";
+}
+<div class="row martop20">
+    <div class="col-xs-12">
+        <h2 class="identifyTxt">People</h2>
+    </div>
+</div>
+
+<p>
+    @Html.ActionLink("Create New", "Create", new { id = ViewBag.PersonGroupId })
+</p>
+
+<table class="table">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+            {
+        <tr>
+            <td>@item.PersonId</td>
+            <td>@item.Name</td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = ViewBag.PersonGroupId, personId = item.PersonId }) |
+                @Html.ActionLink("Edit", "Edit", new { id = ViewBag.PersonGroupId, personId = item.PersonId }) |
+                @Html.ActionLink("Add face", "AddFace", new { id = ViewBag.PersonGroupId, personId = item.PersonId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = ViewBag.PersonGroupId, personId = item.PersonId })
+            </td>
+        </tr>
+    }
+</table>
+<p>
+    @Html.ActionLink("Back to Person List", "Index", "PersonGroups", new { Area = "Faces" }, new { })
+</p>

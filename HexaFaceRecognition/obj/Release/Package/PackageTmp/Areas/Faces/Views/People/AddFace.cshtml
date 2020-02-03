@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "Add Face";
+}
+<div class="row martop20">
+    <div class="col-xs-12">
+        <h2 class="identifyTxt">Add face</h2>
+    </div>
+</div>
+@if (ViewBag.Error != null)
+{
+    <strong>@ViewBag.Error</strong>
+}
+<form method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-xs-12">
+            Upload person face:
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <input type="file" name="PersonFace" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="buttons_div mt40">
+                <button type="submit" class="btn btn-default btn-danger">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" name="id" value="@Request.RequestContext.RouteData.Values["id"]" />
+    <input type="hidden" name="personId" value="@Request.RequestContext.RouteData.Values["personId"]" />
+</form>
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

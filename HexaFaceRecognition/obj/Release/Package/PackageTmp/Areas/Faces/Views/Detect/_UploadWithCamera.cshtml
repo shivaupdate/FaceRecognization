@@ -1,0 +1,93 @@
+﻿@model IList<SelectListItem>
+@{
+    Layout = null;
+}
+
+
+<script>
+
+    // Put event listeners into place
+    window.addEventListener("DOMContentLoaded", function () {
+        // Grab elements, create settings, etc.
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        var video = document.getElementById('video');
+        var mediaConfig = { video: true };
+        var errBack = function (e) {
+            console.log('An error has occurred!', e)
+        };
+
+        // Put video listeners into place
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia(mediaConfig).then(function (stream) {
+                video.src = window.URL.createObjectURL(stream);
+                video.play();
+            });
+        }
+
+        /* Legacy code below! */
+        else if (navigator.getUserMedia) { // Standard
+            navigator.getUserMedia(mediaConfig, function (stream) {
+                video.src = stream;
+                video.play();
+            }, errBack);
+        } else if (navigator.webkitGetUserMedia) { // WebKit-prefixed
+            navigator.webkitGetUserMedia(mediaConfig, function (stream) {
+                video.src = window.webkitURL.createObjectURL(stream);
+                video.play();
+            }, errBack);
+        } else if (navigator.mozGetUserMedia) { // Mozilla-prefixed
+            navigator.mozGetUserMedia(mediaConfig, function (stream) {
+                video.src = window.URL.createObjectURL(stream);
+                video.play();
+            }, errBack);
+        }
+
+        // Trigger photo take
+        document.getElementById('btnSave').addEventListener('click', function () {
+            context.drawImage(video, 0, 0, 330, 250);
+            var image = document.getElementById("canvas").toDataURL("image/png");
+            image = image.replace('data:image/png;base64,', '');
+            $("#imageData").val(image);
+        });
+        $("#btnSave").click(function () {
+            $('#video').hide();
+            $('#canvas').show();
+            $('#loading').show();
+            $('#btnSave').attr("disabled", true);
+            var form = $("#drawingForm");
+            var image = document.getElementById("canvas").toDataURL("image/png");
+            image = image.replace('data:image/png;base64,', '');
+            $("#imageData").val(image);
+            form.submit();
+        });
+    }, false);
+    function isMobile() {
+        return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER["HTTP_USER_AGENT"]);
+    }
+
+</script>
+<form method="post" enctype="multipart/form-data" id="drawingForm">
+    
+    <div class="row martop20">
+        <div class="col-xs-12">
+            <div class="canvas_placeholder">
+                <video id="video" width="330" height="250" autoplay="" @*src="blob:https://davidwalsh.name/914d155c-63e9-4a7f-a09d-cd0cbc9e6e8b"*@></video>
+                <canvas id="canvas" width="330" height="250" hidden></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="row martop20 ">
+        <div class="col-xs-12">
+            <button type="button" id="btnSave" name="btnSave" class="btn checkinbtn btn-danger">Check In</button>
+        </div>
+    </div>
+    <div id="loading" style="display:none;position:fixed;background:rgba(0, 0, 0, 0) url(http://i.stack.imgur.com/FhHRx.gif) 50% 50% no-repeat">
+    </div>
+    <input type="text" name="imageData" id="imageData" hidden />
+
+    <p align="right" style="display:none;visibility:hidden;">
+        @Html.DropDownList("personGroupId", Model)
+    </p>
+    <br />
+</form>

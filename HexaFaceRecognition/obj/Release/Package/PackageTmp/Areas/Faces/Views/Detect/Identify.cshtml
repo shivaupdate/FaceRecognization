@@ -1,0 +1,19 @@
+﻿@model IdentifyFacesModel
+@{
+    ViewBag.Title = "Identify";
+    var groups = (PersonGroup[])ViewBag.PersonGroups;
+}
+<div class="row martop20">
+    <div class="col-xs-12">
+        <h2 class="identifyTxt">Identify Yourself</h2>
+    </div>
+</div>
+@if (Request.Browser.IsMobileDevice)
+    {
+        @Html.Partial("_UploadWithPersonGroups", Model.PersonGroups)
+    }
+    else
+    {
+        @Html.Partial("_UploadWithCamera", Model.PersonGroups)
+    }
+
